@@ -54,19 +54,17 @@ const SEED_TX = [
   {id:"U8F4G2",method:"UPI",     plan:"Per Use",amount:19,  date:"15 Apr",time:"10:05",status:"paid"},
 ];
 
-function QR({ value }) {
-  const N=13, cell=14, pad=8, total=N*cell+pad*2;
-  const grid = Array.from({length:N},(_,r)=>Array.from({length:N},(_,c)=>{
-    const corner=(r<3&&c<3)||(r<3&&c>=N-3)||(r>=N-3&&c<3);
-    return corner||((r*17+c*11+(value.charCodeAt((r*3+c*7)%value.length)||0))%3===0);
-  }));
+function QR({ value, amount }) {
+  const upiLink = `upi://pay?pa=${value}&pn=WriteAI%20Pro&am=${amount || ""}&cu=INR`;
+  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiLink)}&bgcolor=ffffff&color=0D0D1A&margin=10`;
   return (
-    <svg width={total} height={total} viewBox={`0 0 ${total} ${total}`}>
-      <rect width={total} height={total} fill="white" rx="6"/>
-      {grid.map((row,r)=>row.map((dark,c)=>dark?(
-        <rect key={`${r}${c}`} x={pad+c*cell+1} y={pad+r*cell+1} width={cell-2} height={cell-2} fill="#0D0D1A" rx="2"/>
-      ):null))}
-    </svg>
+    <img
+      src={qrUrl}
+      alt="UPI QR Code"
+      width={180}
+      height={180}
+      style={{borderRadius:8,display:"block"}}
+    />
   );
 }
 
@@ -570,7 +568,7 @@ export default function App() {
                       ))}
                     </div>
                     <div style={{background:"white",borderRadius:16,padding:14,display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
-                      <QR value={CONFIG.UPI_ID}/>
+                      <QR value={CONFIG.UPI_ID} amount={selPlan?.price}/>
                       <p style={{...F.mono,fontSize:10,color:"#555",margin:0}}>Scan to pay · {selPlan&&INR(selPlan.price)}</p>
                     </div>
                     <div style={{width:"100%",background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:12,padding:"11px 14px"}}>
