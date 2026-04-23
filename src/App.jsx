@@ -2,9 +2,7 @@ import { useState, useEffect, useRef } from "react";
 
 const CONFIG = {
   RAZORPAY_KEY:  "rzp_live_SgojwGSyyoA4xy",
-  UPI_ID:        "dasarupkumar@icici",
   WHATSAPP:      "919717798541",
-  BUSINESS_NAME: "WriteAI Pro",
 };
 
 const PRICES = { single: 19, monthly: 199, annual: 1999 };
@@ -190,7 +188,6 @@ export default function App() {
   const [payStatus, setPayStatus] = useState("idle");
   const [payMsg,    setPayMsg]    = useState("");
   const [selPlan,   setSelPlan]   = useState(null);
-  const [upiCopied, setUpiCopied] = useState(false);
   const [txList,    setTxList]    = useState(SEED_TX);
 
   useEffect(() => {
@@ -568,19 +565,10 @@ export default function App() {
                       ))}
                     </div>
                     <div style={{background:"white",borderRadius:16,padding:14,display:"flex",flexDirection:"column",alignItems:"center",gap:6}}>
-                      <QR value={CONFIG.UPI_ID} amount={selPlan?.price}/>
+                      <QR amount={selPlan?.price}/>
                       <p style={{...F.mono,fontSize:10,color:"#555",margin:0}}>Scan to pay · {selPlan&&INR(selPlan.price)}</p>
                     </div>
-                    <div style={{width:"100%",background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:12,padding:"11px 14px"}}>
-                      <div style={{...F.mono,fontSize:9,color:"rgba(240,234,214,0.3)",marginBottom:7,letterSpacing:"0.1em"}}>PAY TO UPI ID</div>
-                      <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                        <span style={{...F.mono,fontSize:13,color:"#F0EAD6"}}>{CONFIG.UPI_ID}</span>
-                        <button className="copy-btn" style={{...F.mono,fontSize:10,background:"rgba(245,197,24,0.1)",border:"1px solid rgba(245,197,24,0.2)",color:"#F5C518",padding:"4px 10px",borderRadius:6,cursor:"pointer"}}
-                          onClick={()=>{navigator.clipboard.writeText(CONFIG.UPI_ID);setUpiCopied(true);setTimeout(()=>setUpiCopied(false),2000);}}>
-                          {upiCopied?"✓":"Copy"}
-                        </button>
-                      </div>
-                    </div>
+                  
                     <button style={{width:"100%",padding:13,background:"#00E5A0",border:"none",borderRadius:12,color:"#0D0D1A",fontSize:14,fontFamily:"'DM Sans',sans-serif",fontWeight:600,cursor:"pointer"}}
                       onClick={()=>{addTx("UPI",selPlan.label,selPlan.price);setPayStatus("done");setPayMsg("UPI payment confirmed.");}}>
                       ✓ I've Paid via UPI
