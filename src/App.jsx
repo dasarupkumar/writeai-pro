@@ -215,13 +215,13 @@ export default function App() {
     if (empty) return alert(`Please fill in: ${empty.l}`);
     setLoading(true); setOutput("");
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages",{
-        method:"POST", headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,
-          messages:[{role:"user",content:activeTool.prompt(fields)}]})
+      const res = await fetch("/api/generate", {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({ prompt: activeTool.prompt(fields) }),
       });
       const d = await res.json();
-      setOutput(d.content?.map(c=>c.text||"").join("")||"No output generated.");
+      setOutput(d.text || "No output generated.");
     } catch { setOutput("Error. Please try again."); }
     setLoading(false);
   };
