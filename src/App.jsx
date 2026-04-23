@@ -52,18 +52,10 @@ const SEED_TX = [
   {id:"U8F4G2",method:"UPI",     plan:"Per Use",amount:19,  date:"15 Apr",time:"10:05",status:"paid"},
 ];
 
-function QR({ value, amount }) {
-  const upiLink = `upi://pay?pa=${value}&pn=WriteAI%20Pro&am=${amount || ""}&cu=INR`;
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiLink)}&bgcolor=ffffff&color=0D0D1A&margin=10`;
-  return (
-    <img
-      src={qrUrl}
-      alt="UPI QR Code"
-      width={180}
-      height={180}
-      style={{borderRadius:8,display:"block"}}
-    />
-  );
+function QR({ amount }) {
+  const upiString = `upi://pay?pa=dasarupkumar@icici&pn=WriteAI&am=${amount||""}&cu=INR`;
+  const src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiString)}&margin=12&format=png`;
+  return <img src={src} alt="Scan to pay" width={220} height={220} style={{borderRadius:8,display:"block"}}/>;
 }
 
 function loadRazorpayScript() {
